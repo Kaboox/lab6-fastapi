@@ -2,17 +2,22 @@ name: CD
 on:
   push:
     branches: [ main ]
+
 permissions:
   contents: read
   packages: write
+
 jobs:
   docker-deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
     - name: Login to GHCR
-      run: echo "${{ github.token }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      run: echo "${{ github.token }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
     - name: Build and push
       run: |
-        docker build -t ghcr.io/kaboox/python-app:latest .
-        docker push ghcr.io/kaboox/python-app:latest
+        IMAGE=ghcr.io/kaboox/lab6-fastapi:latest
+        docker build -t $IMAGE .
+        docker push $IMAGE
